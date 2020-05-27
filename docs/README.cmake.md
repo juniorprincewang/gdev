@@ -47,7 +47,8 @@ The following options are supported.
 | usched | enable user mode scheduler (default off)| ON/OFF |
 | use\_as | use assembler (default off)| ON/OFF |
 
-For example, you can pass the above options to CMake like below.
+For example, you can pass the above options to CMake like below.  
+Or you can just run `build.sh` script.
 
 ```sh
 cmake -H. -Brelease \
@@ -75,10 +76,12 @@ So please remember to add `/usr/local/gdev/lib64` to `$LD_LIBRARY_PATH`.
 ## 4. CUDA Driver API test (user-space programs)
 
 You can build / test examples using CUDA Driver API. They are located under the directory `$(TOPDIR)/test/cuda/user/`.
-Follow the instruction to build and use the examples.
+Follow the instruction to build and use the examples.  
+__NOTICE__:
+Execute the test benchmark with root privilege.  
 
 ```sh
 cd $(TOPDIR)/test/cuda/user/madd
 make
-./user_test 256 # a[256] + b[256] = c[256]
+sudo ./user_test 256 # a[256] + b[256] = c[256]
 ```

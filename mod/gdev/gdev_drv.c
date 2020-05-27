@@ -26,6 +26,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include <linux/timer.h>
 #include <linux/cdev.h>
 #include <linux/fs.h>
 #include <linux/kthread.h>
@@ -123,11 +124,13 @@ static int __gdev_sched_mem_thread(void *__data)
 	return 0;
 }
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)
 static void __gdev_credit_handler(unsigned long __data)
 {
 	struct task_struct *p = (struct task_struct *)__data;
 	wake_up_process(p);
 }
+#endif
 
 static int __gdev_credit_com_thread(void *__data)
 {
@@ -137,8 +140,11 @@ static int __gdev_credit_com_thread(void *__data)
 	unsigned long effective_jiffies;
 
 	GDEV_PRINT("Gdev#%d compute reserve running\n", gdev->id);
-
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,15,0)
 	setup_timer_on_stack(&timer, __gdev_credit_handler, (unsigned long)current);
+#else
+	timer_setup_on_stack(&timer, NULL, 0);
+#endif	
 
 	gdev_time_us(&interval, GDEV_UPDATE_INTERVAL);
 	gdev_time_stamp(&last);
@@ -182,8 +188,11 @@ static int __gdev_credit_mem_thread(void *__data)
 	unsigned long effective_jiffies;
 
 	GDEV_PRINT("Gdev#%d memory reserve running\n", gdev->id);
-
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,15,0)
 	setup_timer_on_stack(&timer, __gdev_credit_handler, (unsigned long)current);
+#else
+	timer_setup_on_stack(&timer, NULL, 0);
+#endif	
 
 	gdev_time_us(&interval, GDEV_UPDATE_INTERVAL);
 	gdev_time_stamp(&last);

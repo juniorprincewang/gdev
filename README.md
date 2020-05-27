@@ -43,16 +43,6 @@ To summarize, Gdev offers the following advantages:
 The recommended way to build/install Gdev is building/installing it with CMake.
 - See [docs/README.cmake.md](/docs/README.cmake.md)
 
-Otherwise, you can choose one of the following for what driver to be used (__obsolete__):
-
-1. Do you want to use runtime support in the OS?
-    - See [docs/README.gdev.md](/docs/README.gdev.md)
-2. Do you want to use user-space runtime with Nouveau?
-    - See [docs/README.nouveau.md](/docs/README.nouveau.md)
-3. Do you want to use user-space runtime with PSCNV?
-    - See [docs/README.pscnv.md](/docs/README.pscnv.md)
-4. Do you want to use user-space runtime with NVRM (NVIDIA Driver)?
-    - See [docs/README.nvrm.md](/docs/README.nvrm.md)
 
 
 Once the driver is successfully installed, you can install high-level API:

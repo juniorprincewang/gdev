@@ -73,7 +73,6 @@ int cuda_test_madd(unsigned int n, char *path)
 		grid_y++;
 	printf("block = (%d, %d)\n", block_x, block_y);
 	printf("grid = (%d, %d)\n", grid_x, grid_y);
-
 	gettimeofday(&tv_total_start, NULL);
 
 	res = cuInit(0);
@@ -237,8 +236,16 @@ int cuda_test_madd(unsigned int n, char *path)
 	for (i = 0; i < n; i++) {
 		idx = i*n;
 		for(j = 0; j < n; j++) {			
-			dummy_c = c[idx++];
+//			printf("a[%d]=%d\tb[%d]=%d\tc[%d]=%d\n",idx, a[idx], idx,    b[idx], idx, c[idx]);
+			dummy_c = c[idx]-a[idx]-b[idx];
+			if(dummy_c) {
+				printf("Failed to madd.\n");
+				break;
+			}
+			idx++;
 		}
+		if(dummy_c)
+			break;
 	}
 
 	gettimeofday(&tv_close_start, NULL);
@@ -258,7 +265,6 @@ int cuda_test_madd(unsigned int n, char *path)
 		printf("cuMemFree (c) failed: res = %lu\n", (unsigned long)res);
 		return -1;
 	}
-
 	res = cuModuleUnload(module);
 	if (res != CUDA_SUCCESS) {
 		printf("cuModuleUnload failed: res = %lu\n", (unsigned long)res);
@@ -276,7 +282,6 @@ int cuda_test_madd(unsigned int n, char *path)
 	free(c);
 
 	gettimeofday(&tv_total_end, NULL);
-
 
 	tvsub(&tv_mem_alloc_start, &tv_total_start, &tv);
 	init_gpu = tv.tv_sec * 1000.0 + (float) tv.tv_usec / 1000.0;
@@ -319,6 +324,8 @@ int cuda_test_madd(unsigned int n, char *path)
 	printf("Close: %f\n", close_gpu);
 	printf("Total: %f\n", total);
 
+	if(dummy_c)
+		return -1;
 	return 0;
 }
 
