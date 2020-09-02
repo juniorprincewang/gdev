@@ -119,12 +119,14 @@ int cuda_test_madd(unsigned int n, char *path)
 	gettimeofday(&tv_mem_alloc_start, NULL);
 
 
+	printf("cuMemAlloc (a) size %zu\n", n *n *sizeof(unsigned int));
 	/* a[] */
 	res = cuMemAlloc(&a_dev, n*n * sizeof(unsigned int));
 	if (res != CUDA_SUCCESS) {
 		printf("cuMemAlloc (a) failed\n");
 		return -1;
 	}
+	printf("cuMemAlloc (a) dev addr 0x%llx\n", a_dev);
 	/* b[] */
 	res = cuMemAlloc(&b_dev, n*n * sizeof(unsigned int));
 	if (res != CUDA_SUCCESS) {
